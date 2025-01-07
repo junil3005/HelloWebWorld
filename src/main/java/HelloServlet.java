@@ -1,7 +1,6 @@
 // HTTPServlet을 상속 받는다
 
 import java.io.IOException;
-
 import java.io.PrintWriter;
 import java.util.Enumeration;
 import java.util.logging.Logger;
@@ -15,7 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 //	/hs URL에 연결
 public class HelloServlet extends HttpServlet {
-	private static final Logger logger = 
+	private static final Logger logger =
 			Logger.getLogger("HelloServlet");
 	private String appName = null;
 	private String dbUser = null;
@@ -45,12 +44,12 @@ public class HelloServlet extends HttpServlet {
 		
 		//	분기는 개발자 몫
 		if (req.getMethod().equals("GET")) {
-			doGet(req,resp);
+			doGet(req, resp);
 		} else if (req.getMethod().equals("POST")) {
-			doPost(req,resp);
+			doPost(req, resp);
 		} else {
 			super.service(req, resp);
-		}		
+		}
 	}
 
 	@Override
@@ -63,8 +62,11 @@ public class HelloServlet extends HttpServlet {
 		//	name 파라미터를 받음
 		String name = req.getParameter("name");
 		
+		//	name 파라미터가 없으면 -> Error
 		if (name == null) {
 			name = "Anonymous";
+			throw new ServletException(
+					"name 파라미터는 필수입니다.");
 		}
 		//	환영 메시지 출력
 //		super.doGet(req, resp);
@@ -72,23 +74,21 @@ public class HelloServlet extends HttpServlet {
 		ServletConfig config = getServletConfig();
 		logger.info("ServletName:" + 
 				config.getInitParameter("servletName"));
-		logger.info("description:" + 
+		logger.info("description:" +
 				config.getInitParameter("description"));
 		
-		
 		PrintWriter out = resp.getWriter();
-		out.println("<h1>App Name: " + appName + "<h1>");
+		out.println("<h1>App Name: " + appName + "</h1>");
 		out.println("<h1>Hello Servlet</h1>");
 		out.printf("<p>Welcome, %s님</p>", name);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		//	ContentType 설정
+		// ContentType 설정
 		resp.setContentType("text/html; charset=UTF-8");
 		
 		logger.info("[LifeCycle]: doPost");
-		
 		
 		// POST 메서드 요청 처리
 		//	클라이언트로부터 전송된 모든 데이터를 루프 돌면서 출력
@@ -97,14 +97,13 @@ public class HelloServlet extends HttpServlet {
 		
 		out.println("<p>폼으로부터 전송된 데이터</p>");
 		Enumeration<String> params = req.getParameterNames();
-	
 		
 		out.println("<ul>");
 		while (params.hasMoreElements()) {
-			String paramName = params.nextElement();	//	파라미터이름
+			String paramName = params.nextElement(); //	파라미터이름
 			String paramValue = req.getParameter(paramName);
 			
-			out.printf("<li>%s=%s<li>", paramName, paramValue);
+			out.printf("<li>%s=%s</li>", paramName, paramValue);
 		}
 //		super.doPost(req, resp);
 		out.println("</ul>");
@@ -115,5 +114,4 @@ public class HelloServlet extends HttpServlet {
 		logger.info("[LifeCycle]: Servlet Shutdown...");
 		super.destroy();
 	}
-	
 }
