@@ -98,7 +98,7 @@ public class HelloServlet extends HttpServlet {
 		out.println("<p>폼으로부터 전송된 데이터</p>");
 		Enumeration<String> params = req.getParameterNames();
 		
-		out.println("<ul>");
+		out.println("<ul>"); 
 		while (params.hasMoreElements()) {
 			String paramName = params.nextElement(); //	파라미터이름
 			String paramValue = req.getParameter(paramName);
